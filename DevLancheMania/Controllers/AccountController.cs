@@ -88,7 +88,7 @@ namespace DevLancheMania.Controllers
             HttpContext.User = null;
 
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Idenx", "Home");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

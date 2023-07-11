@@ -4,6 +4,7 @@ using DevLancheMania.Models;
 using DevLancheMania.Repositories;
 using DevLancheMania.Repositories.Interfaces;
 using DevLancheMania.Services;
+using FastReport.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ReflectionIT.Mvc.Paging;
@@ -23,6 +24,8 @@ builder.Services.AddPaging(options =>
 var connectionString = builder.Configuration.GetConnectionString("DevLancheManiacs");
 builder.Services.AddDbContext<DevLancheManiaContext>
     (options => options.UseSqlServer(connectionString));
+
+FastReport.Utils.RegisteredObjects.AddConnection(typeof(MsSqlDataConnection));
 
 builder.Services.AddIdentity<IdentityUser,IdentityRole>()
     .AddEntityFrameworkStores<DevLancheManiaContext>()
@@ -48,6 +51,7 @@ builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<ISeedUserRoleInitial,SeedUserRoleInitial>();
 builder.Services.AddScoped<RelatorioVendasService>();
 builder.Services.AddScoped<GraficoVendasService>();
+builder.Services.AddScoped<RelatorioLanchesService>();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -77,6 +81,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseFastReport();
 app.UseRouting();
 
 CriarPerfisUsuarios(app);
@@ -88,6 +93,11 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
+
+    endpoints.MapControllerRoute(
+     name: "areas",
+     pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
+
     endpoints.MapControllerRoute(
          name: "categoriaFiltro",
         pattern: "Lanche/{action}/{categoria?}",
@@ -97,29 +107,13 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllerRoute(
-          name: "areas",
-          pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}"
-        );
-    });
 });
 
 //app.MapControllerRoute(
 //    name: "default",
 //    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-try
-{
-    app.Run();
-}
-catch (Exception ex)
-{
-
-    Console.WriteLine(string.Format("Exception was throw {0}", ex.Message));
-}
-
+app.Run();
 
 void CriarPerfisUsuarios(WebApplication app)
 {
