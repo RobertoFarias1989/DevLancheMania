@@ -1,5 +1,5 @@
 # DevLancheMania
-[![NPM](https://img.shields.io/npm/l/react)](https://github.com/RobertoFarias1989/Plataforma-para-desenvoldedores-freelancers/blob/master/license) 
+[![NPM](https://img.shields.io/npm/l/react)](https://github.com/RobertoFarias1989/DevLancheMania/blob/master/LICENSE) 
 
 
 
